@@ -1,13 +1,5 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col>
-        <SnakeGame
-          areaHeight="400px"
-          areaWidth="400px" />
-      </v-col>
-    </v-row>
-  </v-container>
+  <SnakeGame />
 </template>
 
 <script>
@@ -38,4 +30,5 @@
 </script>
 
 <style scoped>
+
 </style>

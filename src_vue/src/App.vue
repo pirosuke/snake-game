@@ -19,19 +19,9 @@
 
     <v-main>
       <v-container fluid class="fill-height">
-        <v-layout row>
-          <v-flex grow pa-1>
-            <router-view/>
-          </v-flex>
-        </v-layout>
+        <router-view/>
       </v-container>
     </v-main>
-    <v-footer
-      color="indigo"
-      app
-    >
-      <span class="white--text">&copy; 2021</span>
-    </v-footer>
   </v-app>
 </template>
 

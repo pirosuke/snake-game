@@ -1,40 +1,35 @@
 <template>
-    <v-container>
+    <v-container style="height: 100%;">
         <StartDialog
             :open.sync="isDialogOpened"
             :message="message" />
-        <v-layout
-            text-xs-center
-        >
-            <svg
-                id="app"
-                :width="areaWidth"
-                :height="areaHeight"
-                style="border: 1px solid #000;">
-                <Snake
-                    :start_direction="snake_direction"
-                    start_size="3"
-                    ref="snake" />
-                <Food
-                    :x="food.x"
-                    :y="food.y"
-                    ref="food" />
-                <CtrlBtn
-                    @click.native="turnSnakeLeft"
-                    x="10"
-                    y="350"
-                    label="L" />
-                <CtrlBtn
-                    @click.native="turnSnakeRight"
-                    x="290"
-                    y="350"
-                    label="R" />
-                <Score
-                    x="10"
-                    y="10"
-                    ref="score" />
-            </svg>
-        </v-layout>
+        <svg
+            id="snake-game"
+            ref="snakeGame"
+            style="width:100%; height: 100%;" >
+            <Snake
+                :start_direction="snake_direction"
+                start_size="3"
+                ref="snake" />
+            <Food
+                :x="food.x"
+                :y="food.y"
+                ref="food" />
+            <CtrlBtn
+                @click.native="turnSnakeLeft"
+                x="10"
+                :y="maxY - 50"
+                label="L" />
+            <CtrlBtn
+                @click.native="turnSnakeRight"
+                :x="maxX - 110"
+                :y="maxY - 50"
+                label="R" />
+            <Score
+                x="10"
+                y="10"
+                ref="score" />
+        </svg>
     </v-container>
 </template>
 
@@ -55,8 +50,6 @@ export default {
         Score,
     },
     props: [
-        'areaHeight',
-        'areaWidth',
     ],
     data: function () {
         return {
@@ -69,11 +62,14 @@ export default {
                 x: -10,
                 y: -10,
             },
+            maxX: 0,
+            maxY: 0,
         };
     },
     created () {
     },
     mounted() {
+        this.resetArea()
     },
     watch: {
         isDialogOpened: function(val) {
@@ -91,16 +87,14 @@ export default {
 
             return ""
         },
-
-        maxX() {
-            return this.areaWidth.replace("px", "") - 0
-        },
-
-        maxY() {
-            return this.areaHeight.replace("px", "") - 0
-        }
     },
     methods: {
+        resetArea() {
+            const rect = this.$refs.snakeGame.getBoundingClientRect()
+            this.maxX = rect.width
+            this.maxY = rect.height
+        },
+
         resetGame() {
             this.$refs.snake.reset()
             this.$refs.score.resetScore()
@@ -175,5 +169,7 @@ export default {
 </script>
 
 <style>
-
+#snake-game {
+    border: 1px solid #000;
+}
 </style>
