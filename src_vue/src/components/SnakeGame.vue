@@ -6,15 +6,15 @@
         <svg
             id="snake-game"
             ref="snakeGame"
-            style="width:100%; height: 100%;" >
+            style="width:100%; height: 80%;" >
             <Snake
                 :start_direction="snake_direction"
                 start_size="3"
                 ref="snake" />
-            <Food
-                :x="food.x"
-                :y="food.y"
-                ref="food" />
+            <Foods
+                :max-x="maxX"
+                :max-y="maxY"
+                ref="foods" />
             <CtrlBtn
                 @click.native="turnSnakeLeft"
                 x="10"
@@ -37,7 +37,7 @@
 import { mapGetters, mapState } from 'vuex'
 import StartDialog from './StartDialog'
 import Snake from './Snake'
-import Food from './Food'
+import Foods from './Foods'
 import CtrlBtn from './ControlButton'
 import Score from './Score'
 
@@ -45,7 +45,7 @@ export default {
     components: {
         StartDialog,
         Snake,
-        Food,
+        Foods,
         CtrlBtn,
         Score,
     },
@@ -54,28 +54,26 @@ export default {
     data: function () {
         return {
             snake_direction: 'left',
-            speed: 10,
-            interval: null,
             isGameOver: false,
             isDialogOpened: true,
-            food: {
-                x: -10,
-                y: -10,
-            },
             maxX: 0,
             maxY: 0,
+
+            snakeFps: 10,
+            snakeLastTs: null,
         };
     },
     created () {
     },
     mounted() {
         this.resetArea()
+        window.addEventListener('keyup', this.handleKeyup)
     },
     watch: {
         isDialogOpened: function(val) {
             if (!val) {
+                this.$refs.snakeGame.focus()
                 this.resetGame()
-                this.startGame()
             }
         }
     },
@@ -87,6 +85,10 @@ export default {
 
             return ""
         },
+
+        snakeFpsInterval() {
+            return 1000 / this.snakeFps
+        }
     },
     methods: {
         resetArea() {
@@ -97,30 +99,66 @@ export default {
 
         resetGame() {
             this.$refs.snake.reset()
+            this.$refs.foods.reset()
             this.$refs.score.resetScore()
             this.snake_direction = 'left'
-            this.putFood()
+            this.isGameOver = false
+            this.snakeFps = 10
+            for (let i = 0; i < 3; i++) {
+                this.$refs.foods.addFood()
+            }
+            this.lastTs = Date.now()
+            this.gameLoop()
         },
 
-        startGame() {
-            this.interval = setInterval(() => {
+        gameLoop() {
+
+            const now = Date.now()
+            const elapsed = now - this.snakeLastTs
+            if (elapsed > this.snakeFpsInterval) {
+                this.snakeLastTs = now - (elapsed % this.snakeFpsInterval)
+
                 this.$refs.snake.updatePosition()
                 this.$refs.score.addScore(this.$refs.snake.body_points.length)
                 if (!this.isSnakeAlive()) {
                     this.isGameOver = true
-                    clearInterval(this.interval)
                     this.isDialogOpened = true
                 }
 
-                if (this.isEating()) {
+                const foodEaten = this.$refs.foods.checkEating(this.$refs.snake.head_br, this.$refs.snake.head_tl)
+                if (foodEaten !== null) {
+                    switch (foodEaten.type) {
+                        case 'speedup':
+                            this.snakeFps += 10
+                            break
+                        case 'grow':
+                            for (let i = 0; i < 10; i++) {
+                                this.$refs.snake.addBody()
+                            }
+                            break
+                        case 'more_food':
+                            this.$refs.foods.addFoods(10)
+                            break
+                    }
                     this.$refs.snake.addBody()
-                    this.putFood()
+                    this.$refs.foods.addFood()
                 }
-            }, 1000 / this.speed)
+            }
+
+            if (!this.isGameOver) {
+                this.raf = requestAnimationFrame(this.gameLoop)
+            }
         },
 
-        sleep() {
-            return new Promise(requestAnimationFrame)
+        handleKeyup(e) {
+            switch (e.keyCode) {
+                case 76:
+                    this.turnSnakeLeft()
+                    break
+                case 82:
+                    this.turnSnakeRight()
+                    break
+            } 
         },
 
         turnSnakeLeft() {
@@ -146,23 +184,6 @@ export default {
             }
 
             return true
-        },
-
-        isEating() {
-            if (this.$refs.food.isPointHittingFood(this.$refs.snake.head_tl, this.$refs.snake.head_br)) {
-                return true
-            }
-
-            return false
-        },
-
-        putFood() {
-            this.food.x = this.generateRandomPoint(this.maxX, 20, 20)
-            this.food.y = this.generateRandomPoint(this.maxY, 20, 100)
-        },
-
-        generateRandomPoint(max, minPadding, maxPadding) {
-            return Math.floor(Math.random() * Math.floor(max - maxPadding * 2)) + minPadding
         },
     }
 }
