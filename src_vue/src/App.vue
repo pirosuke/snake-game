@@ -6,7 +6,7 @@
       dark
     >
       <v-toolbar-title class="headline">
-        <span>Snake Game</span>
+        <span>Star Snake</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn

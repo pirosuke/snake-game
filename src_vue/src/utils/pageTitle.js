@@ -1,6 +1,6 @@
 export default {
     mounted() {
-        let pageTitleBase = "Snake Game"
+        let pageTitleBase = "Star Snake"
         document.title = pageTitleBase
     },
 };
