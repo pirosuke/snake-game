@@ -6,16 +6,17 @@
                 y="0"
                 width="180"
                 height="40"
-                stroke="#000"
-                fill="#fff"
+                stroke="#fff"
+                fill="#000"
+                fill-opacity="0.25"
                 rx="5"
                 ry="5" />
             <text
                 x="10"
                 y="30"
                 width="180"
-                fill="#000"
-                stroke="#000"
+                fill="#9f9"
+                stroke="#9f9"
                 font-size="25">
                 {{ scoreFormatted }}
             </text>

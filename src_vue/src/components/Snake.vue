@@ -1,23 +1,30 @@
 <template>
     <g transform="translate(1, 1)">
-        <circle
+        <polygon
+            :points="starPoints"
+            fill="#c6ff00"
+            stroke="#c6ff00" />
+        <!-- circle
             :r="parts_radius"
-            fill="#C00"
-            stroke="#C00"
+            fill="#c6ff00"
+            stroke="#c6ff00"
             :cx="head_point.x"
-            :cy="head_point.y" />
+            :cy="head_point.y" / -->
         <circle
             v-for="body_point in body_points"
             :key="body_point.id"
             :r="parts_radius"
-            fill="#000"
+            fill="#c6ff79"
+            fill-opacity="0.5"
             stroke="#000"
+            stroke-opacity="0.4"
             :cx="body_point.x"
             :cy="body_point.y" />
     </g>
 </template>
 
 <script>
+import SVGUtils from '../utils/svg'
 export default {
     components: {
     },
@@ -55,6 +62,10 @@ export default {
                 x: this.head_point.x + this.parts_radius,
                 y: this.head_point.y + this.parts_radius,
             }
+        },
+
+        starPoints() {
+            return SVGUtils.generateStarPoints(this.head_point.x, this.head_point.y, 10, 5, 5)
         },
     },
     methods: {

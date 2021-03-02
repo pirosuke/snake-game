@@ -18,12 +18,12 @@
             <CtrlBtn
                 @click.native="turnSnakeLeft"
                 x="10"
-                :y="maxY - 50"
+                :y="maxY - 90"
                 label="L" />
             <CtrlBtn
                 @click.native="turnSnakeRight"
-                :x="maxX - 110"
-                :y="maxY - 50"
+                :x="maxX - 90"
+                :y="maxY - 90"
                 label="R" />
             <Score
                 x="10"
@@ -104,7 +104,7 @@ export default {
             this.snake_direction = 'left'
             this.isGameOver = false
             this.snakeFps = 10
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 5; i++) {
                 this.$refs.foods.addFood()
             }
             this.lastTs = Date.now()
@@ -129,7 +129,7 @@ export default {
                 if (foodEaten !== null) {
                     switch (foodEaten.type) {
                         case 'speedup':
-                            this.snakeFps += 10
+                            this.snakeFps += 8
                             break
                         case 'grow':
                             for (let i = 0; i < 10; i++) {
@@ -137,7 +137,7 @@ export default {
                             }
                             break
                         case 'more_food':
-                            this.$refs.foods.addFoods(10)
+                            this.$refs.foods.addFoods(5)
                             break
                     }
                     this.$refs.snake.addBody()
@@ -192,5 +192,6 @@ export default {
 <style>
 #snake-game {
     border: 1px solid #000;
+    background-color: #000;
 }
 </style>

@@ -1,18 +1,20 @@
 <template>
     <g :transform="'translate(' + x + ',' + y + ')'">
         <a xlink:href="#">
-            <rect
-                x="0"
-                y="0"
-                width="100"
-                height="40"
-                rx="5"
-                ry="5" />
+            <circle
+                r="40"
+                cx="40"
+                cy="40"
+                stroke="#efe"
+                stroke-width="2%"
+                stroke-opacity="0.3"
+                fill="#fff"
+                fill-opacity="0.2" />
             <text
-                x="40"
-                y="30"
-                fill="#FFF"
-                stroke="#FFF"
+                x="32"
+                y="47"
+                fill="#9f9"
+                stroke="#9f9"
                 font-size="25">
                 {{ label }}
             </text>

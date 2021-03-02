@@ -28,7 +28,7 @@ export default {
             foodTypes: [
                 {
                     name: "normal",
-                    color: "#666",
+                    color: "#ccc",
                 },
                 {
                     name: "speedup",
@@ -40,7 +40,7 @@ export default {
                 },
                 {
                     name: "more_food",
-                    color: "#00F",
+                    color: "#66F",
                 },
             ],
         };
